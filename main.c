@@ -1,6 +1,8 @@
 #include "main.h"
 
 char *read_validate_line(void);
+
+//parse the line into a list of arguments
 char *parse_tokenize_line(char *userInputLine);
 
 int main(int argumentCount, char **argumentVector){
