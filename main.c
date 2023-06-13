@@ -1,14 +1,18 @@
 #include "main.h"
 
 char *read_validate_line(void);
+char *parse_tokenize_line(char *userInputLine);
 
 int main(int argumentCount, char **argumentVector){
     char *initPrompt = "t-shell> $ ";
+    
     char *userInputLine;
+    char *tokenizedLine;
 
     (void)argumentCount; (void)argumentVector;(void)initPrompt;
 
     userInputLine = read_validate_line();
+    tokenizedLine = parse_tokenize_line(userInputLine);
 
     free(userInputLine);
     return (0);
@@ -49,4 +53,6 @@ char *read_validate_line(void){
         }
     }
 }
-    
+char *parse_tokenize_line(char *userInputLine){
+
+}
