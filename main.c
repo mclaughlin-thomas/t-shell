@@ -5,11 +5,11 @@ char *read_validate_line(void);
 //parse the line into a list of arguments
 char **parse_tokenize_line(char *userInputLine);
 
-int main(int argumentCount, char **argumentVector){    
+int main(int argc, char **argv){    
     char *userInputLine;
     char **tokenizedLine;
 
-    (void)argumentCount; (void)argumentVector;
+    (void)argc; (void)argv;
 
     printf("t-shell> $ ");
     userInputLine = read_validate_line();
@@ -85,7 +85,31 @@ char **parse_tokenize_line(char *userInputLine){
     }
 
     tokenCollection[i] = NULL;
-    printf("t-shell> $ ");
-
     return tokenCollection;
+}
+
+int lsh_launch(char **args){
+    pid_t pid;
+    pid_t childPid;
+    int status;
+
+    pid = fork();
+
+    if (pid == 0) { // is current process the child process?
+        if (execvp(args[0], args) == -1) { // did we get an error attempting to execute the new program?
+            fprintf(stderr, "There was an error you fool!\n");
+        }
+        exit(EXIT_FAILURE);
+    } 
+    else if (pid < 0) { //should not be less than 0, indicates process error
+        // Error forking
+        fprintf(stderr, "There was an error you fool!\n");
+    } 
+    else {
+        do { // this is the parents process
+            childPid = waitpid(pid, &status, WUNTRACED); // child process to change state
+        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+    }
+
+    return 1;
 }
