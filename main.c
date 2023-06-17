@@ -88,7 +88,7 @@ char **parse_tokenize_line(char *userInputLine){
     return tokenCollection;
 }
 
-int lsh_launch(char **args){
+int fork_process(char **args){
     pid_t pid;
     pid_t childPid;
     int status;
@@ -112,4 +112,14 @@ int lsh_launch(char **args){
     }
 
     return 1;
+}
+char *commands[] = {
+  "cd",
+  "exit"
+};
+int cd(char **args){
+
+}
+int exit(char **args){
+    
 }
