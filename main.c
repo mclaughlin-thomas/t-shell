@@ -113,6 +113,7 @@ int fork_process(char **args){
 
     return 1;
 }
+
 char *commands[] = {
   "cd",
   "exit"
@@ -121,5 +122,11 @@ int cd(char **args){
 
 }
 int exit(char **args){
-    
+
 }
+
+//associate commands with appropriate function
+int (*builtin_func[]) (char **) = {
+  &cd,
+  &exit
+};
