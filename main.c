@@ -1,26 +1,39 @@
 #include "main.h"
 
 char *read_validate_line(void);
-
-//parse the line into a list of arguments
 char **parse_tokenize_line(char *userInputLine);
+int execution(char **args);
+int fork_process(char **args);
+int number_of_commands(void);
+int cdfcn(char **args);
+int exitfcn(char **args);
+
+char *commands[] = {
+  "cd",
+  "exit"
+};
+int (*appropriate_function[]) (char **) = {
+    &cdfcn,
+    &exitfcn
+};
+
 
 int main(int argc, char **argv){    
     char *userInputLine;
     char **tokenizedLine;
+    int status;
 
     (void)argc; (void)argv;
 
     printf("t-shell> $ ");
     userInputLine = read_validate_line();
     tokenizedLine = parse_tokenize_line(userInputLine);
+    status = execution(tokenizedLine);
 
     free(userInputLine);
     free(tokenizedLine);
-
     return (0);
 }
-
 char *read_validate_line(void){
     int initBufferSize = 1024; //seems as if this is the norm
     char *curBuffer = malloc(sizeof(char) * initBufferSize);
@@ -87,7 +100,6 @@ char **parse_tokenize_line(char *userInputLine){
     tokenCollection[i] = NULL;
     return tokenCollection;
 }
-
 int fork_process(char **args){
     pid_t pid;
     pid_t childPid;
@@ -113,20 +125,37 @@ int fork_process(char **args){
 
     return 1;
 }
+int execution(char **args)
+{
+  int i;
 
-char *commands[] = {
-  "cd",
-  "exit"
-};
-int cd(char **args){
+  if (args[0] == NULL) {
+    // An empty command was entered.
+    return 1;
+  }
 
+  for (i = 0; i < number_of_commands(); i++) {
+    if (strcmp(args[0], commands[i]) == 0) {
+      return (*appropriate_function[i])(args);
+    }
+  }
+
+  return fork_process(args);
 }
-int exit(char **args){
-
+int cdfcn(char **args){
+    if (args[1] == NULL) {
+        fprintf(stderr, "Error with providing argument for CD! \n");
+    } 
+    else {
+        if (chdir(args[1]) != 0) {
+            perror("ERROR in changing directory");
+        }
+    }
+    return 1;
 }
-
-//associate commands with appropriate function
-int (*builtin_func[]) (char **) = {
-  &cd,
-  &exit
-};
+int exitfcn(char **args){
+    return 0;
+}
+int number_of_commands() {
+    return sizeof(commands) / sizeof(char *);
+}
