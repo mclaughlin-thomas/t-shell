@@ -7,14 +7,18 @@ int fork_process(char **args);
 int number_of_commands(void);
 int cdfcn(char **args);
 int exitfcn(char **args);
+int lsfnc(char **args);
+
 
 char *commands[] = {
   "cd",
-  "exit"
+  "exit",
+  "ls"
 };
 int (*appropriate_function[]) (char **) = {
     &cdfcn,
-    &exitfcn
+    &exitfcn,
+    &lsfnc
 };
 
 
