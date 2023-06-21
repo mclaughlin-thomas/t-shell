@@ -7,14 +7,17 @@ int fork_process(char **args);
 int number_of_commands(void);
 int cdfcn(char **args);
 int exitfcn(char **args);
+int lsfcn(char **args);
 
 char *commands[] = {
   "cd",
-  "exit"
+  "exit",
+  "ls"
 };
 int (*appropriate_function[]) (char **) = {
     &cdfcn,
-    &exitfcn
+    &exitfcn,
+    &lsfcn
 };
 
 
@@ -155,6 +158,29 @@ int cdfcn(char **args){
 }
 int exitfcn(char **args){
     return 0;
+}
+int lsfcn(char **args) {
+    pid_t pid;
+    int status;
+
+    pid = fork();
+
+    if (pid == 0) {
+        if (execvp("/bin/ls", args) == -1) {
+            fprintf(stderr, "Error executing ls command.\n");
+        }
+        exit(EXIT_FAILURE);
+    } 
+    else if (pid < 0) {
+        fprintf(stderr, "Error forking process.\n");
+    } 
+    else {
+        do {
+            waitpid(pid, &status, WUNTRACED);
+        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+    }
+
+    return 1;
 }
 int number_of_commands() {
     return sizeof(commands) / sizeof(char *);
