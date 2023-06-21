@@ -11,8 +11,7 @@ int lsfcn(char **args);
 
 char *commands[] = {
   "cd",
-  "exit",
-  "ls"
+  "exit"
 };
 int (*appropriate_function[]) (char **) = {
     &cdfcn,
