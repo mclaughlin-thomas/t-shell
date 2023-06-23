@@ -40,7 +40,7 @@ int main(int argc, char **argv){
 char *read_validate_line(void){
     int initBufferSize = 1024; //seems as if this is the norm
     char *curBuffer = malloc(sizeof(char) * initBufferSize);
-    if (!curBuffer) { //curBuffer was unable to al`locate the memory if it is null
+    if (!curBuffer) { //curBuffer was unable to allocate the memory if it is null
         fprintf(stderr, "There was an allocation error you fool!\n");
         exit(EXIT_FAILURE);
     }
