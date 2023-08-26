@@ -28,13 +28,20 @@ int main(int argc, char **argv){
 
     (void)argc; (void)argv;
 
-    printf("t-shell> $ ");
-    userInputLine = read_validate_line();
-    tokenizedLine = parse_tokenize_line(userInputLine);
-    status = execution(tokenizedLine);
+    while (1) { // Infinite loop to keep the shell running
+        printf("t-shell> $ ");
+        userInputLine = read_validate_line();
+        tokenizedLine = parse_tokenize_line(userInputLine);
+        status = execution(tokenizedLine);
 
-    free(userInputLine);
-    free(tokenizedLine);
+        free(userInputLine);
+        free(tokenizedLine);
+
+        if (status == 0) {
+            // If the status is 0, it means the user entered the "exit" command.
+            break; // Exit the loop and terminate the shell.
+        }
+    }
     return (0);
 }
 char *read_validate_line(void){
